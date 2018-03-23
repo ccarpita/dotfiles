@@ -1,0 +1,13 @@
+[ -f $HOME/.profile ] && . $HOME/.profile
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
+PERL_MB_OPT="--install_base \"/Users/chris/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/chris/perl5"; export PERL_MM_OPT;
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

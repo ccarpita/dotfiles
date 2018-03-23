@@ -1,0 +1,158 @@
+#!/usr/bin/env bash
+#
+# bootstrap installs things.
+
+. $DOTFILES/lib/successfail
+
+setup_gitconfig () {
+  if ! [ -f $DOTFILES/git/gitconfig.symlink ]
+  then
+
+    info 'setup gitconfig'
+
+    git_credential='cache'
+    if [ "$(uname -s)" == "Darwin" ]
+    then
+      git_credential='osxkeychain'
+    fi
+
+    user ' - What is your github author name?'
+    read -e git_authorname
+    user ' - What is your github author email?'
+    read -e git_authoremail
+
+    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" -e "s/GIT_CREDENTIAL_HELPER/$git_credential/g" $DOTFILES/git/gitconfig.symlink.example > $DOTFILES/git/gitconfig.symlink
+
+    success 'gitconfig'
+  fi
+}
+
+link_files () {
+  ln -fs $1 $2
+  success "linked $1 to $2"
+}
+
+append_files () {
+  for append in `find $DOTFILES -maxdepth 3 -name \*.append`
+  do
+    appendlen=${#append}
+    baselen=${#DOTFILES}
+    relative=${append:$baselen}
+    path=$HOME/`expr "$relative" : '/[^/]*/\(.*\).append'`
+    if [ ! -f $path ]; then
+      info "copying $path"
+      mkdir -p `dirname $path`
+      cp $append $path
+    else
+      extlen=$(( $appendlen - 7 ))
+      noext=${append:0:$extlen}
+      grepfile="$noext.grep"
+      if [ -f $grepfile ]; then
+        grepexpr=$(cat $grepfile)
+        grep "$grepexpr" $path &>/dev/null
+        RETVAL=$?
+        if [ $RETVAL -eq 1 ]
+        then
+          success "appending: $path"
+          cat $append >> $path
+        fi
+      else
+        fail "no grepfile"
+      fi
+    fi
+  done
+  success 'files appended'
+}
+
+install_dotfiles () {
+  info 'installing dotfiles'
+
+  overwrite_all=false
+  backup_all=false
+  skip_all=false
+
+  for source in `find $DOTFILES -maxdepth 3 -name \*.symlink`
+  do
+    dest="$HOME/.`basename \"${source%.*}\"`"
+
+    if [[ -f $source || -d $source ]] && [ -L $dest ] && [ `readlink $dest` == "$source" ]
+    then
+#      success "$dest already configured"
+      continue
+    elif [ -f $dest ] || [ -d $dest ]
+    then
+
+      overwrite=false
+      backup=false
+      skip=false
+
+      if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
+      then
+        user "File already exists: `basename $dest`, what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
+        read -n 1 action
+
+        case "$action" in
+          o )
+            overwrite=true;;
+          O )
+            overwrite_all=true;;
+          b )
+            backup=true;;
+          B )
+            backup_all=true;;
+          s )
+            skip=true;;
+          S )
+            skip_all=true;;
+          * )
+            ;;
+        esac
+      fi
+
+      if [ "$overwrite" == "true" ] || [ "$overwrite_all" == "true" ]
+      then
+        rm -rf $dest
+        success "removed $dest"
+      fi
+
+      if [ "$backup" == "true" ] || [ "$backup_all" == "true" ]
+      then
+        mv $dest $dest\.backup
+        success "moved $dest to $dest.backup"
+      fi
+
+      if [ "$skip" == "false" ] && [ "$skip_all" == "false" ]
+      then
+        link_files $source $dest
+      else
+        success "skipped $source"
+      fi
+
+    else
+      link_files $source $dest
+    fi
+
+  done
+success "dotfiles are cool"
+}
+
+setup_gitconfig
+install_dotfiles
+append_files
+
+# If we are on a mac, lets install and setup homebrew
+if [ "$(uname -s)" == "Darwin" ]
+then
+  info "installing dependencies"
+  if [ -f $DOTFILES/bin/dots-osx ] && $DOTFILES/bin/dots-osx > /tmp/dotfiles-dot 2>&1
+  then
+    success "dependencies installed"
+  else
+    fail "error installing dependencies"
+  fi
+fi
+
+unset -f info
+unset -f user
+unset -f success
+unset -f fail

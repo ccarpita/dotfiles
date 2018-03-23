@@ -1,0 +1,63 @@
+# Sample gitconfig
+#
+
+#[hub]
+#        protocol = https
+[user]
+	name = Chris Carpita
+	email = ccarpita@gmail.com
+[init]
+  templatedir = ~/.git_template
+[credential]
+  helper = cache
+[alias]
+  co = checkout
+  praise = blame
+  promote = !$ZSH/bin/git-promote
+  wtf     = !$ZSH/bin/git-wtf
+  rank-contributers = !$HOME/bin/git-rank-contributers
+  count   = !git shortlog -sn
+  ribbon = tag --force _ribbon origin/master
+  catchup = log --patch --reverse --topo-order _ribbon..origin/master
+  find = log --pretty=\"format:%Cgreen%H %Cblue%s\" --name-status --grep
+  log-pretty = log --pretty=\"format:%Cgreen%H %Cblue%an: %s\" --name-status
+  ci = commit
+  br = branch
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  ui = true
+[core]
+  excludesfile = ~/.gitignore
+  editor = vim
+  autocrlf = false
+  filemode = false
+[apply]
+  whitespace = nowarn
+[mergetool]
+  keepBackup = false
+[difftool]
+  prompt = false
+[diff]
+  tool = vimdiff
+[help]
+  autocorrect = 0
+[push]
+  # See `git help config` (search for push.default)
+  # for more information on different options of the below setting.
+  #
+  # Setting to git 2.0 default to surpress warning message
+  default = current
+[branch]
+  autosetuprebase = always
+  autosetupmerge = true
+[pull]
+  ff=1
+  rebase=1
+[filter "lfs"]
+  clean = git lfs clean %f
+  smudge = git lfs smudge %f
+  required = true
+[lfs]
+	concurrenttransfers = 20

@@ -1,0 +1,352 @@
+"Vundle
+set nocompatible
+set rtp+=~/.vim/bundle/VundleInit.vim
+call vundle#begin()
+Plugin 'airblade/vim-gitgutter'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+" Asynchronous Lint Engine
+Plugin 'w0rp/ale'
+Plugin 'tpope/vim-fugitive'
+Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
+"Plugin 'kien/ctrlp.vim'
+Plugin 'rking/ag.vim'
+Plugin 'scrooloose/nerdtree'
+"Plugin 'Valloric/YouCompleteMe'
+Plugin 'altercation/vim-colors-solarized'
+"Plugin 'scrooloose/syntastic'
+"Plugin 'ternjs/tern_for_vim'
+Plugin 'rodjek/vim-puppet'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'ekalinin/Dockerfile.vim'
+Plugin 'rhysd/vim-clang-format'
+Plugin 'nvie/vim-flake8'
+Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plugin 'junegunn/fzf.vim'
+Plugin 'tfnico/vim-gradle'
+call vundle#end()
+filetype off
+filetype plugin indent on
+
+"Don't forcibly write newlines to the end of a file
+set binary
+
+"Syntax Highlighting On if not vimdiff
+if &diff
+  syntax off
+else
+  syntax on
+endif
+
+set synmaxcol=1024
+
+set background=dark
+
+" Requires:
+" Plugin 'altercation/vim-colors-solarized'
+" colorscheme solarized
+
+"syntax sync minlines=256
+set norelativenumber
+
+
+"Disable parenthesis matching since this impacts editor performance
+let loaded_matchparen=1
+
+"Set the maximum number of changes that can be undone
+set undolevels=500
+
+"Always display the status line such that it is visible above the command line
+set laststatus=2
+
+"Disable folding
+set nofoldenable
+
+"Automatically strip trailing spaces
+autocmd BufWritePre *.php :%s/\s\+$//e
+autocmd BufWritePre *.pl :%s/\s\+$//e
+autocmd BufWritePre *.pm :%s/\s\+$//e
+autocmd BufWritePre *.js :%s/\s\+$//e
+autocmd BufWritePre *.proto :%s/\s\+$//e
+autocmd BufWritePre *.xml :%s/\s\+$//e
+
+"Treat *.json files like JS
+autocmd BufNewFile,BufRead *.json set ft=javascript
+autocmd BufNewFile,BufRead *.jsx set ft=javascript
+
+"Automatically insert matching brackets
+"inoremap {      {}<Left>
+"inoremap {<CR>  {<CR>}<Esc>O
+"inoremap {{     {
+"inoremap {}     {}
+
+"Ignore case on searching
+set ic
+
+"Turn off search highlighting by default
+set nohls
+
+"Make file-completion work like bash
+set wildmode=longest,list
+
+"Backspace can work like a normal text editor during insert mode
+"Some VI snobs don't approve, but they can all go fuck themselves.
+set backspace=2
+
+"Function to set the tab size
+function! SetTab(tabSize)
+  set ts=a:tabSize
+  set sw=a:tabSize
+  set softtabstop=a:tabSize
+endfunction
+
+"Auto-indent
+set ai
+
+"Set tab sizes
+set ts=2
+set sw=2
+set softtabstop=2
+set shiftround
+
+"Automatically expand literal tabs into spaces
+set expandtab
+
+"UTF-8 is best. Best best best.
+set fileencoding=utf-8
+set encoding=utf-8
+
+"set autochdir
+"set shellcmdflag=-ic
+
+"Smart indent.  Turned off because it's not smart enough.
+"set si
+"
+"Always show current line and character number
+set ruler
+
+"Set the status line format to:
+"  Left: FILEPATH [FILETYPE][RO?][MODIFIED?]
+"  Right: BYTE_POS_IN_FILE [HEXVAL_UNDER_CURSOR] CHAR_POS_ON_LINE CURRENT_LINE/TOTAL_LINES
+"
+set statusline=%f\ %y%r%m\ %=\ %o\ [%02B]\ %4c\ %5l/%L
+
+"word navigation (w, dw, cw) uses _ as a border, useful within var names
+"set iskeyword-=_
+
+"Map jj to Escape in insert mode
+imap jj <ESC>
+
+"Set mapleader to be a comma, which is what I can type to activate my own
+"custom commands
+let mapleader = ","
+
+"Find files
+map <Leader>s <ESC>:FZF<Enter>
+map <C-p> <ESC>:FZF<Enter>
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
+
+"Toggle paste mode
+map <Leader>v <ESC>:set paste! paste?<Enter>
+
+"Toggle tab expansion
+map <Leader><Tab> <ESC>:set expandtab! expandtab?<Enter>
+
+nnoremap <Leader>b<Space> :Make<Space>
+nnoremap <Leader>bb :Make<Up><CR>
+nnoremap <Leader>bw :Make watch<CR>
+nnoremap <Leader>ba <ESC>:Make ads_test<CR>
+nnoremap <Leader>bp <ESC>:Make playback<CR>
+nnoremap <Leader>bf  <ESC>:Copen<CR>
+
+map <Leader>t  <C-w><C-]><C-w>T
+
+map <Leader><Left> <ESC>:tabp<Enter>
+map <Leader><Right> <ESC>:tabn<Enter>
+
+nnoremap <silent><Leader><C-]> <C-w><C-]><C-w>T
+
+"Open most recently edited files navigator
+map <Leader>m <ESC>:MRU<ENTER>
+
+"Inject today's date at the cursor position
+map <Leader>D <ESC>:r !date \+\%Y-\%m-\%d<Enter>
+
+"LLDB: generates a breakpoint set command based on the current file and line
+"number, and sticks it into the pastebin register
+" 1. Copy current filename into the nameless register
+" 2. Create a small buffer at the top
+" 3. Insert beginning of command: "set breakpoint -f "
+" 4. Put (insert) the copied filename
+" 5. Start appending text after the file name: " -l "
+" 6. Switch back to previous window
+" 7. Copy current line into nameless register
+" 8. Switch back to small buffer
+" 9. Put (insert) the copied line number
+" 10. Yank the buffer into the system clipboard
+" 11. Done!  Close the buffer.
+nnoremap <Leader>bp <ESC>:let @"=expand("%:t")<CR>:1new<CR>ibreakpoint set -f <ESC>pA -l <ESC><C-W><C-P>:let @"=line(".")<CR><C-W><C-P>$p<ESC>"*yy<ESC>:bd!<CR>
+
+"Re-detect filetype
+map <Leader>r <ESC>:filetype detect<Enter>
+
+"Reload .vimrc
+map <Leader>rc <ESC>:so $MYVIMRC<Enter>
+
+"Set column width to 80 if vertical split mode is on
+map <Leader>w <ESC>:vertical resize 80<Enter>
+map <Leader>0 <ESC>:resize +2<Enter>
+map <Leader>9 <ESC>:resize -2<Enter>
+
+map <Leader>f <ESC>:NERDTreeFind<Enter>
+
+map <Leader>d <ESC>:NERDTreeToggle<Enter>
+
+map <Leader>a <ESC>:Ag --ignore tags<Space>
+
+map <Leader>gg <ESC>:GitGutterToggle<Enter>
+map <Leader>gb <ESC>:Gblame<Enter>
+map <Leader>gd <ESC>:!rm /tmp/.git.diff<Enter>:vs /tmp/.git.diff<Enter>:r !git diff<Enter>:set filetype=diff<Enter>:w<Enter>gg
+map <Leader>gp <ESC>:!rm /tmp/.git.log<Enter>:vs /tmp/.git.log<Enter>:r !git log -p -n 50<Enter>:set filetype=diff<Enter>:w<Enter>gg
+
+map <Leader>cl <ESC>i<DELETE><SPACE><ESC>
+"map <Leader>gl <ESC>:!rm /tmp/.git.log<Enter>:vs /tmp/.git.log<Enter>:r !git log --pretty=format:\%H\ \%an:\ \%s --name-status -n 500<Enter>:set filetype=diff<Enter>gg
+nnoremap <Leader>cf :ClangFormat<CR>
+nnoremap <Leader>cc :YcmDiags<CR>
+nnoremap <Leader>jd :YcmCompleter GoTo<CR>
+nnoremap <Leader>fi :YcmCompleter FixIt<CR>
+
+nnoremap <Leader>T :tabnew<CR>
+
+autocmd FileType python map <buffer> <Leader>8 :call Flake8()<CR>
+
+
+"highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+"match OverLength /\%80v.\+/
+"match OverLength '\%>80v.\+'
+"hi OverLength ctermbg=lightred cterm=none
+"match OverLength /\%>80v/
+
+" cursorline is set for cpp and javascript files (see autocmd lines)
+"hi ColorColumn ctermbg=darkgrey guibg=darkgrey
+hi CursorLine cterm=none ctermbg=black guibg=darkgrey
+hi LineNr term=none ctermbg=black
+hi CursorLineNr term=bold ctermbg=black
+
+nnoremap <Leader>h :call<SID>LongLineHLToggle()<cr>
+fun! s:LongLineHLToggle()
+ if !exists('w:longlinehl')
+  let w:longlinehl = matchadd('ErrorMsg', '.\%>120v', 0)
+  echo "Long lines highlighted"
+ else
+  call matchdelete(w:longlinehl)
+  unl w:longlinehl
+  echo "Long lines unhighlighted"
+ endif
+endfunction
+
+"Wrap gitcommit file types at the appropriate length
+filetype indent plugin on
+
+"Highlight literal tabs and trailing spaces
+set list
+set listchars=tab:»·,trail:·,nbsp:¬
+hi SpecialKey ctermbg=black ctermfg=magenta guibg=red guifg=red
+
+"Highlight colorscheme for GitGutter
+hi SignColumn ctermbg=darkgrey
+let g:gitgutter_sign_modified_removed = '/'
+
+"Folding syntax highlighting colors
+"hi Folded cterm=bold ctermfg=white ctermbg=black
+
+"Tab colors
+hi TabLineFill ctermfg=black ctermbg=black
+hi TabLineSel ctermfg=LightGreen ctermbg=black
+hi TabLine ctermfg=darkgrey ctermbg=black
+
+set makeprg=spmake\ $*
+
+"crontab editing policies
+autocmd filetype crontab setlocal nobackup nowritebackup
+
+
+"Don't expand tabs when editing Makefiles
+autocmd FileType make setlocal noexpandtab
+
+"C++ file policies
+"autocmd filetype cpp set colorcolumn=101
+"autocmd filetype cpp11 set colorcolumn=101
+autocmd filetype cpp11 set filetype=cpp number cursorline
+autocmd filetype javascript set number "cursorline
+autocmd filetype python set number cursorline
+autocmd filetype python setlocal softtabstop=4 ts=4 sw=4
+autocmd filetype javascript let loaded_youcompleteme=1  "disable YCM for js
+
+"YouCompleteMe Options
+"let g:loaded_youcompleteme=1 "DISABLE YCM
+let g:ycm_confirm_extra_conf=0
+let g:ycm_collect_identifiers_from_tags_files=2
+let g:ycm_server_log_level = 'debug'
+let g:ycm_server_log_level = 'debug'
+let g:ycm_always_populate_location_list = 1
+hi YcmErrorLine guibg=#3f0000 ctermbg=darkgrey
+hi YcmWarningLine guibg=#3f0000 ctermbg=darkgrey
+hi YcmErrorSection guibg=#3f0000 ctermbg=darkgrey
+hi YcmWarningSection guibg=#3f0000 ctermbg=darkgrey
+"let g:ycm_filetype_blacklist = { 'javascript': 0 }
+
+let g:javascript_plugin_jsdoc = 1
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.o,*/build/*
+
+"CtrlP Options
+let g:ctrlp_cmd = 'CtrlP'
+" Options: CtrlP, CtrlPMixed, CtrlPBuffer
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]build|\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+" Use Ag for much faster indexing
+let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden
+      \ --ignore .git
+      \ --ignore .svn
+      \ --ignore .hg
+      \ --ignore .DS_Store
+      \ --ignore "**/*.pyc"
+      \ -g ""'
+
+"localvimrc opt
+let g:localvimrc_ask=0
+
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\}
+let g:airline#extensions#ale#enabled = 1
+let g:ale_pattern_options = {
+\   '.*\.\(cpp\|h\|java\)$': {'ale_enabled': 0},
+\}
+let g:ale_sh_shellcheck_options = "-e SC1090"
+
+"let g:syntastic_html_tidy_ignore_errors = [ '<iframe> proprietary attribute "sandbox"' ]
+"
+
+"let g:syntastic_javascript_eslint_exe='$(npm bin)/eslint'
+"let g:syntastic_javascript_checkers = ['eslint']
+
+"let g:syntastic_sh_shellcheck_args="-x"
+"let g:syntastic_mode_map = {
+"  \ "mode": "active",
+"  \ "passive_filetypes": []
+"  \ }
+"let g:syntastic_ignore_files = ['.profile']
+let g:jsx_ext_required = 0
+
+
+hi Todo ctermfg=white ctermbg=none
+
+set grepprg=rg\ --vimgrep
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+

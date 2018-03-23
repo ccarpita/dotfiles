@@ -1,0 +1,92 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.dll
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+#Makefile
+cmake_install.cmake
+install_manifest.txt
+cmake-*
+
+# Python
+*.py[cod]
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+#Translations
+*.mo
+
+#Mr Developer
+.mr.developer.cfg
+
+# custom
+ycm_core_tests
+
+# When we use the bcp tool to copy over the parts of boost we care about, it
+# also copies some cruft files we don't need; this ignores them
+cpp/BoostParts/libs/*/build
+cpp/BoostParts/libs/*/test
+
+# These folders in cpp/llvm contain lots of upstream cruft we don't care
+# about and would rather not have in our tree...
+cpp/llvm/docs/*
+cpp/llvm/tools/clang/www/*
+
+# ... but excluding these LLVMBuild.txt files breaks the build so we need to
+# explicitely include them
+!LLVMBuild.txt
+
+# XCode cruft
+xcuserdata
+
+# Exclude auto generated vim doc tags.
+doc/tags
+
+# VIM swap files
+*.swp
+
+# Temporary backup files/dirs
+*.bak
+
+# Node
+node_modules
+npm-debug.log
+
+dependency-reduced-pom.xml
+
+build-xcode
+build-ycm
+build-release
+.ycm_extra_conf.py
+
+lint-results.txt
+
+config.iml
+.idea/*
+*.iml
+
+google_auth.json
+
+bq-retention.log
+bq-retention-test.json
+
+.venv
