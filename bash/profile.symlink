@@ -400,7 +400,18 @@ alias screen-remote="screen -DR remote"
 alias newalias=". \$HOME/.alias"
 alias newprofile="source \$HOME/.profile"
 
-alias dots="cd ~/.dotfiles && git pull && cd - &>/dev/null"
+dots() {
+  if [ -d ~/.dotfiles ]; then
+    (
+      cd ~/.dotfiles && git pull
+    )
+  fi
+  if [ -d ~/dev/dotfiles-personal ]; then
+    (
+      cd ~/dev/dotfiles-personal && git pull
+    )
+  fi
+}
 
 alias permstd="chmod 755"
 alias ll='ls -l'
