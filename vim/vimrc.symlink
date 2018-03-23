@@ -1,6 +1,6 @@
 "Vundle
 set nocompatible
-set rtp+=~/.vim/bundle/VundleInit.vim
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-airline/vim-airline'
@@ -21,10 +21,11 @@ Plugin 'rodjek/vim-puppet'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'rhysd/vim-clang-format'
-Plugin 'nvie/vim-flake8'
+"Plugin 'nvie/vim-flake8'
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
 Plugin 'tfnico/vim-gradle'
+Plugin 'prettier/vim-prettier'
 call vundle#end()
 filetype off
 filetype plugin indent on
@@ -70,9 +71,10 @@ autocmd BufWritePre *.pm :%s/\s\+$//e
 autocmd BufWritePre *.js :%s/\s\+$//e
 autocmd BufWritePre *.proto :%s/\s\+$//e
 autocmd BufWritePre *.xml :%s/\s\+$//e
+autocmd BufWritePre *.yaml :%s/\s\+$//e
+autocmd BufWritePre *.yml :%s/\s\+$//e
 
-"Treat *.json files like JS
-autocmd BufNewFile,BufRead *.json set ft=javascript
+autocmd BufNewFile,BufRead *.json set ft=json
 autocmd BufNewFile,BufRead *.jsx set ft=javascript
 
 "Automatically insert matching brackets
@@ -131,6 +133,9 @@ set ruler
 "  Right: BYTE_POS_IN_FILE [HEXVAL_UNDER_CURSOR] CHAR_POS_ON_LINE CURRENT_LINE/TOTAL_LINES
 "
 set statusline=%f\ %y%r%m\ %=\ %o\ [%02B]\ %4c\ %5l/%L
+"
+let g:airline_section_z = '%2p%% ☰ %l/%L㏑ %cℂ : %o𝕓'
+
 
 "word navigation (w, dw, cw) uses _ as a border, useful within var names
 "set iskeyword-=_
@@ -299,6 +304,9 @@ hi YcmWarningSection guibg=#3f0000 ctermbg=darkgrey
 
 let g:javascript_plugin_jsdoc = 1
 
+let g:prettier#autoformat = 0
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
+
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.o,*/build/*
 
 "CtrlP Options
@@ -323,6 +331,7 @@ let g:localvimrc_ask=0
 
 let g:ale_linters = {
 \   'javascript': ['eslint'],
+\   'python': ['flake8'],
 \}
 let g:airline#extensions#ale#enabled = 1
 let g:ale_pattern_options = {
@@ -349,4 +358,3 @@ hi Todo ctermfg=white ctermbg=none
 
 set grepprg=rg\ --vimgrep
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-

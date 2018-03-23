@@ -39,11 +39,25 @@ export USE_CCACHE=1
 
 export GOPATH="$HOME/go"
 
-export NODE_VERSION="8.5.0"
+export NODE_VERSION="9.10.0"
 export NVM_DIR="$HOME/.nvm"
 
 hostname=$(hostname)
 PROMPT_COMMAND='__git_ps1 "\[\033[01;32m\]\u@$hostname\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\[\033[01;33m\]" "\[\033[00m\]\n\\\$ "'
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+
+ssh-init() {
+  eval "$(ssh-agent)"
+  if [ -z "$SSH_KEY" ]; then
+    echo "SSH_KEY not defined. Set this to a private key file to add it to ssh agent" >&2
+    return
+  fi
+  if ! ssh-add -l | grep "$SSH_KEY" &>/dev/null; then
+    ssh-add "$SSH_KEY"
+  else
+    echo "Key already registered in ssh agent: $SSH_KEY" >&2
+  fi
+}
 
 nvm-init() {
   if  [[ -f /usr/local/opt/nvm/nvm.sh ]]; then
@@ -84,6 +98,7 @@ use-docker-native() {
   unset DOCKER_HOST
 }
 alias docker-env=use-docker-machine
+alias ..='cd ..'
 
 SSH_ENV="$HOME/.ssh/environment"
 
@@ -201,9 +216,12 @@ if [ "$(uname)" == 'Darwin' ]; then
 
   alias osx-dock-keep-hidden="defaults write com.apple.dock autohide-delay -float 2; killall Dock"
 
-  addpath /usr/local/Cellar/python/2.7.5/bin
+#   addpath /usr/local/Cellar/python/2.7.5/bin
   # ensure local bin is before /usr/bin
-  addpath /usr/local/bin
+alias virtualenv="python /usr/local/lib/python2.7/site-packages/virtualenv.py"
+addpath /usr/local/bin
+
+
 elif [ "$(uname) $(uname -i)" == 'Linux x86_64' ]; then
   addpath ~/.dotfiles/bin-linux-x86_64
 fi
@@ -387,8 +405,6 @@ else
     alias psa="ps -ww -A -F"
 fi
 
-alias cd="cd -P"
-alias cdl="cd -L"
 alias psp="ps -ww -F -p"
 alias psg="psa | grep "
 
@@ -413,6 +429,12 @@ dots() {
   fi
 }
 
+#################################
+# Directory and File Operations #
+#################################
+
+alias cd="cd -P"
+alias cdl="cd -L"
 alias permstd="chmod 755"
 alias ll='ls -l'
 alias lsd='ls --color=none -d */'
@@ -422,6 +444,8 @@ alias la='ls -A'
 alias l='ls -CF'
 alias lt='ls -lrt'
 alias lth="ls -lt | head"
+alias ..="cd .."
+alias ~="cd ~"
 
 alias grep='grep --color --line-buffered'
 alias space-to-tab="sed 's/\s\+/\\t/g'"
@@ -445,6 +469,9 @@ alias glpn="git log -p --decorate --color --name-only"
 alias gsu="git submodule update --init --recursive"
 alias gss="git submodule sync --recursive"
 alias pass-sync="git -C ~/.password-store push"
+
+alias load-testruns-pw="op get item ostzq3ywovh2tku5otiawv7eti | jq '.details.fields[] | select(.name==\"password\") | .value' -r | pbcopy"
+alias psqltestruns="load-testruns-pw && psql -h localhost -U postgres"
 
 unalias current-branch push pull &>/dev/null
 
@@ -482,6 +509,10 @@ pull() {
 
 rebase() {
   git checkout master && pull && git checkout - && git rebase master
+}
+
+fork-sync-master() {
+  git checkout master && pull && git push origin master
 }
 
 recent-branches() {
@@ -691,7 +722,6 @@ vimfzf() {
 }
 alias vf=vimfzf
 
-alias profile="vim ~/.profile"
 alias profilecat="cat ~/.profile"
 _profile_grep(){
   grep "$@" < ~/.profile
@@ -708,25 +738,14 @@ urlencode() {
 
 
 cmake-build() {
-  local buildtype="$1"
-  local dir="$2"
-  local typestr=""
+  local buildtype="${1:-Ninja}"
+  local dir="${2:-build}"
   shift
   shift
-  if [[ -n "$buildtype" ]]; then
-    typestr=" -G \"$buildtype\" "
-  fi
-  if [[ -n "$BUILD_DIR" ]]; then
+  if [ -n "$BUILD_DIR" ]; then
     dir="$BUILD_DIR"
   fi
-  if [[ -z "$dir" ]]; then
-    if [[ -z "$typestr" ]]; then
-      dir=build-make
-    else
-      dir=build
-    fi
-  fi
-  if [[ -n "$CMAKE_BUILD_CLEAN" ]]; then
+  if [ -n "$CMAKE_BUILD_CLEAN" ]; then
     rm -rf "$dir"
   fi
   mkdir -p "$dir"
@@ -734,7 +753,7 @@ cmake-build() {
     set -e
     set -x
     cd "$dir"
-    cmake .. "$typestr" -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE:-Debug}" "$@"
+    cmake .. -G "$buildtype" -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE:-Debug}" "$@"
   )
 }
 
@@ -763,8 +782,16 @@ cmake-ninja-asan() {
 cmake-ninja-coverage() {
   CMAKE_BUILD_TYPE=Coverage cmake-ninja "$@"
 }
-alias cmn=cmake-ninja
-alias cmn-coverage=cmake-ninja-coverage
+
+cmn() {
+  cmake-ninja "$@"
+}
+cmn-coverage() {
+  CMAKE_BUILD_TYPE=Coverage cmake-ninja "$@"
+}
+cmn-clean() {
+  CMAKE_BUILD_CLEAN=1 cmake-ninja "$@"
+}
 
 num-cpus() {
   sysctl -n machdep.cpu.core_count
@@ -823,13 +850,17 @@ scp-keys-to-remote() {
   return 0
 }
 
+open-with-intellij() {
+  local target="${1:-pom.xml}"
+  open -a 'IntelliJ IDEA Community' "$target"
+}
+
 open-pom() {
-  local pom="${1:-pom.xml}"
-  open -a 'IntelliJ IDEA' "$pom"
+  open-with-intellij "$@"
 }
 
 open-sbt() {
-  open-pom "build.sbt"
+  open-with-intellij "build.sbt"
 }
 
 # Pretty-prints any json file, supports stripping /* multiline comments */
@@ -883,6 +914,7 @@ super-swede () {
   trans-swedish "$1"
 }
 
+alias profile="vim ~/.profile"
 vimprofile () {
   vim ~/.vimrc
 }
@@ -1102,5 +1134,39 @@ sourceif() {
   [ -f "$1" ] && source "$1"
 }
 
+yamlcheck() {
+  file="$1"
+  ruby -e "require 'yaml'; require 'json'; puts JSON.generate(YAML.load_file('$file'))"
+}
+
 sourceif "$HOME/.profile.spotify"
 sourceif "$HOME/.profile.local"
+
+# added by Anaconda3 5.1.0 installer
+# export PATH="/anaconda3/bin:$PATH"
+# source activate py27
+
+if command -v reattach-to-user-namespace &>/dev/null; then
+  alias open="reattach-to-user-namespace open "
+fi
+
+memcache-key-dump() {
+  host=${1:-localhost}
+  echo 'stats items'  | nc $host 11211  | grep -oe ':[0-9]*:' | grep -o \\d\\+ | sort | uniq | xargs -L1 -I{} bash -c "echo 'stats cachedump {} 1000' | nc $host 11211"
+}
+
+swagger-editor() {
+  port=${1:-8080}
+  docker run -d -p $port:8080 swaggerapi/swagger-editor:3.6.2
+}
+
+export PATH="$HOME/.cargo/bin:$PATH"
+
+bq-hours-for-date() {
+  local date=${1}
+  if [ -z "$date" ]; then
+    echo "usage: bq-hours-for-date <yyyymmdd>" >&1
+    return 1
+  fi
+  seq -f%f ${date}01 ${date}23 | cut -d. -f1
+}
