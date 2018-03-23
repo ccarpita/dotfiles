@@ -1,6 +1,14 @@
 # Common Dotfiles
 
-![Output sample](http://clk.pw/bunny)
+![A bunny falls over at a desk](http://clk.pw/bunny)
+
+## Installation
+
+```bash
+export DOTFILES="$HOME/.dotfiles"
+git clone git@github.com:ccarpita/dotfiles "$DOTFILES"
+source "$DOTFILES/script/bootstrap"
+```
 
 ## Components
 
