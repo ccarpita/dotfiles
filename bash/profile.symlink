@@ -380,9 +380,11 @@ export CCACHE_CPP2=1
 export CCACHE_COMPRESS=1
 #export CCACHE_NODIRECT=1
 
-export HOMEBREW_GITHUB_API_TOKEN="255ec33c1b85686fb9a9be690e457245266280ae"
 if [ -f "/etc/bash_completion.d/git-completion.bash" ]; then
     . /etc/bash_completion.d/git-completion.bash
+fi
+if [ -f "$HOME/.profile.brew" ]; then
+  . "$HOME/.profile.brew"
 fi
 
 alias date="date -u"
@@ -1170,3 +1172,6 @@ bq-hours-for-date() {
   fi
   seq -f%f ${date}01 ${date}23 | cut -d. -f1
 }
+
+# Java Environment (jenv)
+eval "$(jenv init -)"
