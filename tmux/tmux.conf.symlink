@@ -1,6 +1,16 @@
+
+#set -g @plugin 'tmux-plugins/tpm'
+#set -g @plugin 'tmux-plugins/tmux-sensible'
+#set -g @plugin 'tmux-plugins/tmux-resurrect'
+#set -g @plugin 'tmux-plugins/tmux-continuum'
+
+set-option -g set-titles on
+
+# Use C-a instead of C-b for tmux command entry, like screen
 set -g prefix C-a
 unbind C-b
-setw -gq utf8 on
+
+set -g default-shell /usr/local/bin/bash
 
 bind a send-prefix
 
@@ -24,8 +34,6 @@ bind-key -n C-S-Right swap-window -t +1
 
 bind < resize-pane -D 5
 
-if-shell 'test -f /usr/local/bin/bash' 'set-option -g default-shell /usr/local/bin/bash'
-
 # setw -g mode-mouse off
 # set-option -g mouse-select-pane off
 
@@ -45,14 +53,14 @@ set -g status-bg black
 set -g status-fg white
 set -g status-right '#[fg=colour223,bg=colour241,bold] %m/%d'
 
-setw -g window-status-current-fg colour81
-setw -g window-status-current-bg colour238
-setw -g window-status-current-attr bold
+# setw -g window-status-current-fg colour81
+# setw -g window-status-current-bg colour238
+# setw -g window-status-current-attr bold
 setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F '
 
-setw -g window-status-fg colour138
-setw -g window-status-bg colour235
-setw -g window-status-attr none
+# setw -g window-status-fg colour138
+# setw -g window-status-bg colour235
+# setw -g window-status-attr none
 setw -g window-status-format ' #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F '
 set-option -g status-left-length 40
 
@@ -61,4 +69,9 @@ setw -g mode-keys vi
 
 bind-key -T copy-mode-vi v send-keys -X begin-selection
 bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+
+bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "pbcopy"
+
+
+# run -b '~/.tmux/plugins/tpm/tpm'
 

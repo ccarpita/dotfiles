@@ -1,1 +1,3 @@
-[ -f $HOME/.profile ] && . $HOME/.profile
+# BEGIN source-bashrc
+source ~/.bashrc
+# END source-bashrc

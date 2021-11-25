@@ -1,0 +1,12 @@
+setopt PROMPT_SUBST
+
+alias sourcezshrc="source \$HOME/.zshrc"
+
+alias sourceprofile="source \$HOME/.profile"
+sourceprofile
+
+source ~/.profile.d/zsh.sh
+
+eval "$(direnv hook zsh)"
+
+export PATH="$HOME/.poetry/bin:$PATH"
