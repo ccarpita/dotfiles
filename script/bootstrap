@@ -2,6 +2,8 @@
 #
 # bootstrap installs things.
 
+export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+
 . $DOTFILES/lib/successfail
 
 setup_gitconfig () {

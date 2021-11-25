@@ -30,5 +30,3 @@ include yaml
 debug "Source ~/.profile.local"
 source ~/.profile.local
 debug "Sourced ~/.profile.local"
-
-addpath "$HOME/go/bin"

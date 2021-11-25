@@ -8,7 +8,7 @@
 	email = ccarpita@butterflynetinc.com
 	signingkey = 3618D6C0EF936376E0D53C43E7201850855A0BDB
 [init]
-	defaultBranch = develop
+	defaultBranch = main
 # templatedir = ~/.git_template
 [credential]
   helper = cache
