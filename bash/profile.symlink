@@ -3,6 +3,7 @@
 
 export PATH="/usr/bin:/usr/local/bin:/usr/sbin:/sbin:/bin"
 export PROFILE_DEBUG=${PROFILE_DEBUG:-0}
+export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
 
 source ~/.profile.d/init.sh
 debug "Sourced: init.sh"
@@ -27,8 +28,21 @@ include tmux
 include yaml
 [[ $is_osx -eq 1 ]] && include darwin
 
+if [ -d "$DOTFILES" ]; then
+  cd "$DOTFILES"
+  if git status | grep -q "working tree clean"; then
+    DOTFILES_CLEAN=1
+  else 
+    yellow=$(tput setaf 3)
+    reset=$(tput sgr0)
+    echo -e "${yellow}$DOTFILES has been modified. Commit and push changes at your earliest convenience.${reset}"
+  fi
+fi
+
 if [ -f ~/.profile.local ]; then
   debug "Source ~/.profile.local"
   source ~/.profile.local
   debug "Sourced ~/.profile.local"
 fi
+
+
