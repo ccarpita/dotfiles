@@ -60,17 +60,60 @@ virtualenv_info() {
   if [[ -n "$WORKON_HOME" ]]; then
       VENV="${VENV/$WORKON_HOME\//env:}"
   fi
-  VENV=$(echo "$VENV" | sed -e "s/.*\/envs\///" 2>/dev/null)
-  echo " %F{yellow}($VENV)%f"
+  echo "$VENV" | sed -e "s/.*\/envs\///" 2>/dev/null
+}
+
+
+ps1_git_branch() {
+  branch="$(git_prompt_branch)"
+  if [ -n "$branch" ]; then
+    echo -e " [🌈 $branch]"
+  fi
+  echo ""
+}
+
+ps1_venv() {
+  info="$(pyenv version-name 2>/dev/null ||:)"
+  if [[ -n "$info" ]]; then
+    echo -e " [🐍 $info]"
+  fi
+  echo ""
+}
+
+ps1_user_host() {
+  ps1_user="$(whoami)"
+  if [[ "$ps1_user" == "ccarpita" ]]; then
+    ps1_user=""
+  fi
+  echo "$ps1_user@"
+}
+
+ps1_prompt() {
+  ext=""
+  red=$(tput setaf 1)
+  green=$(tput setaf 2)
+  yellow=$(tput setaf 3)
+  blue=$(tput setaf 4)
+  magenta=$(tput setaf 5)
+  cyan=$(tput setaf 6)
+  reset=$(tput sgr0)
+  for item in "$@"; do
+    if [[ "$item" == "--ext" ]]; then
+      ext="\[$green\]\$(ps1_venv)\[$reset\]\[$yellow\]\$(ps1_git_branch)\[$reset\]"
+    fi
+  done
+  echo -e "\[$green\]\$(ps1_user_host)\[$reset\]:\[$blue\]\w\[$reset\]$ext\n❯ "
 }
 
 # path + git info + cursor (red if last command failed, otherwise yellow)
 prompt_on() {
   export PROMPT=$'\n%F{blue}%~%f$(virtualenv_info)$(git_prompt_info)\n%(?.%F{yellow}.%F{red})❯%f '
+  export PS1="$(ps1_prompt --ext)"
 }
 
 prompt_off() {
   export PROMPT=$'\n%F{blue}%~%f\n%(?.%F{yellow}.%F{red})❯%f '
+  export PS1="$(ps1_prompt)"
 }
 
 prompt_on

@@ -27,6 +27,8 @@ include tmux
 include yaml
 [[ $is_osx -eq 1 ]] && include darwin
 
-debug "Source ~/.profile.local"
-source ~/.profile.local
-debug "Sourced ~/.profile.local"
+if [ -f ~/.profile.local ]; then
+  debug "Source ~/.profile.local"
+  source ~/.profile.local
+  debug "Sourced ~/.profile.local"
+fi
