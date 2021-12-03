@@ -99,7 +99,7 @@ ps1_prompt() {
   reset=$(tput sgr0)
   for item in "$@"; do
     if [[ "$item" == "--ext" ]]; then
-      ext="\[$green\]\$(ps1_venv)\[$reset\]\[$yellow\]\$(ps1_git_branch)\[$reset\]"
+      ext=" \[$green\][💻 \$(uname -m)]\[$reset\]\[$green\]\$(ps1_venv)\[$reset\]\[$yellow\]\$(ps1_git_branch)\[$reset\]"
     fi
   done
   echo -e "\[$green\]\$(ps1_user_host)\[$reset\]:\[$blue\]\w\[$reset\]$ext\n❯ "

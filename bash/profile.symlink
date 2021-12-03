@@ -9,8 +9,6 @@ source ~/.profile.d/init.sh
 debug "Sourced: init.sh"
 
 include completions
-
-
 include settings
 include build
 include datetime
@@ -29,14 +27,16 @@ include yaml
 [[ $is_osx -eq 1 ]] && include darwin
 
 if [ -d "$DOTFILES" ]; then
-  cd "$DOTFILES"
-  if git status | grep -q "working tree clean"; then
-    DOTFILES_CLEAN=1
-  else 
-    yellow=$(tput setaf 3)
-    reset=$(tput sgr0)
-    echo -e "${yellow}$DOTFILES has been modified. Commit and push changes at your earliest convenience.${reset}"
-  fi
+  pushd "$DOTFILES" && {
+    if git status | grep -q "working tree clean"; then
+      DOTFILES_CLEAN=1
+    else 
+      yellow=$(tput setaf 3)
+      reset=$(tput sgr0)
+      echo -e "${yellow}$DOTFILES has been modified. Commit and push changes at your earliest convenience.${reset}"
+    fi
+  }
+  popd
 fi
 
 if [ -f ~/.profile.local ]; then
@@ -44,5 +44,4 @@ if [ -f ~/.profile.local ]; then
   source ~/.profile.local
   debug "Sourced ~/.profile.local"
 fi
-
 

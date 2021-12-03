@@ -14,10 +14,6 @@ paths=(
   $DOTFILES/bin
   ./node_modules/.bin
   ./bin
-  $HOME/.cargo/bin
-  $HOME/.pyenv/bin
-  $HOME/.pyenv/shims
-
 )
 
 
