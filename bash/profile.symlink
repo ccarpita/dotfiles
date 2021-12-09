@@ -27,7 +27,7 @@ include yaml
 [[ $is_osx -eq 1 ]] && include darwin
 
 if [ -d "$DOTFILES" ]; then
-  pushd "$DOTFILES" && {
+  pushd "$DOTFILES" >/dev/null && {
     if git status | grep -q "working tree clean"; then
       DOTFILES_CLEAN=1
     else 
@@ -36,7 +36,7 @@ if [ -d "$DOTFILES" ]; then
       echo -e "${yellow}$DOTFILES has been modified. Commit and push changes at your earliest convenience.${reset}"
     fi
   }
-  popd
+  popd >/dev/null
 fi
 
 if [ -f ~/.profile.local ]; then

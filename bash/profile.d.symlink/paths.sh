@@ -12,6 +12,7 @@ paths=(
   /usr/local/bin
   /opt/android-sdk/platform-tools
   $DOTFILES/bin
+  $HOME/bin
   ./node_modules/.bin
   ./bin
 )

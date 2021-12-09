@@ -108,12 +108,16 @@ ps1_prompt() {
 # path + git info + cursor (red if last command failed, otherwise yellow)
 prompt_on() {
   export PROMPT=$'\n%F{blue}%~%f$(virtualenv_info)$(git_prompt_info)\n%(?.%F{yellow}.%F{red})❯%f '
-  export PS1="$(ps1_prompt --ext)"
+  if ! is-zsh; then
+    export PS1="$(ps1_prompt --ext)"
+  fi
 }
 
 prompt_off() {
   export PROMPT=$'\n%F{blue}%~%f\n%(?.%F{yellow}.%F{red})❯%f '
-  export PS1="$(ps1_prompt)"
+  if ! is-zsh; then
+    export PS1="$(ps1_prompt)"
+  fi
 }
 
 prompt_on
