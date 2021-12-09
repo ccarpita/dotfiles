@@ -12,6 +12,10 @@ elif [[ "$(uname)" == "Linux" ]]; then
   is_linux=1
 fi
 
+is-bash() {
+  [[ -n "$BASH_VERSION" ]]
+}
+
 is-zsh() {
   if [[ -z "${BASH:-}" ]] && [[ "$SHELL" == "/bin/zsh" ]]; then
     return 0

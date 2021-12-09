@@ -27,7 +27,7 @@ else
   complete-command() {
     echo "Cannot complete: non-bash"
   }
-  if [[ "$SHELL" =~ zsh ]]; then
+  if is-zsh; then
     zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
     zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
     fpath=(~/.zsh $fpath)
@@ -35,4 +35,6 @@ else
   fi
 fi
 
-
+if is-bash; then
+  include "$DOTFILES/git/git-completion.bash"
+fi
