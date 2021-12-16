@@ -67,3 +67,4 @@ open-screenshare() {
 
 complete-command open-vnc known-hosts
 complete-command open-screenshare known-hosts
+complete-command ssh known-hosts

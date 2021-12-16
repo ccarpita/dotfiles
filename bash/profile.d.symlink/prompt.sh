@@ -67,7 +67,7 @@ virtualenv_info() {
 ps1_git_branch() {
   branch="$(git_prompt_branch)"
   if [ -n "$branch" ]; then
-    echo -e " [🌈 $branch]"
+    echo -e " [🌱 $branch]"
   fi
   echo ""
 }
