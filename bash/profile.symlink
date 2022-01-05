@@ -16,6 +16,7 @@ include file-operations
 include git
 include java
 include locale
+include net
 include paths
 include ps
 include prompt
