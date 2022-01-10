@@ -7,7 +7,7 @@ export CCACHE_COMPRESS=1
 DERIVED_DATA="$HOME/Library/Developer/Xcode/DerivedData"
 
 export DYLD_LIBRARY_PATH="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
-if [[ "$(uname -s)" == "Darwin" ]]; then
+if [[ "$(uname -s)" == "Darwin" ]] && [[ -z "$SDKROOT" ]]; then
   export SDKROOT=$(xcrun -show-sdk-path)
 fi
 
