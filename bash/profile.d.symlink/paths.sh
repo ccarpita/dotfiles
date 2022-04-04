@@ -13,6 +13,7 @@ paths=(
   /opt/android-sdk/platform-tools
   $DOTFILES/bin
   $HOME/bin
+  $HOME/go/bin
   ./node_modules/.bin
   ./bin
 )
@@ -20,8 +21,6 @@ paths=(
 
 if [[ $is_linux -eq 1 ]] && [[ "$(uname -i)" == "x86_64" ]]; then
   paths+=($HOME/.dotfiles/bin-linux-x86_64)
-elif [[ $is_osx -eq 1 ]]; then
-  paths+=(/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin)
 fi
 
 for comp in ${paths[@]}; do

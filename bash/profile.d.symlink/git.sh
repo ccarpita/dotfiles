@@ -84,8 +84,8 @@ rebase() {
   (
     pushd "$(git rev-parse --show-toplevel)" &>/dev/null
     trunk=develop
-    [ -f .git-default-branch ] && trunk=$(cat .git-default-branch)
-    git checkout "$trunk" && pull && git checkout - && git rebase "$trunk"
+    [ -f .git/default-branch ] && trunk=$(cat .git/default-branch)
+    git fetch origin && git rebase -i origin/"$trunk"
   )
 }
 

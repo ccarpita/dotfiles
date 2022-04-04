@@ -16,6 +16,7 @@ include file-operations
 include git
 include java
 include locale
+include macos
 include net
 include paths
 include ps
@@ -25,7 +26,14 @@ include security
 include ssh
 include tmux
 include yaml
+include variables
 [[ $is_osx -eq 1 ]] && include darwin
+
+if [ -f ~/.profile.local ]; then
+  debug "Source ~/.profile.local"
+  source ~/.profile.local
+  debug "Sourced ~/.profile.local"
+fi
 
 if [ -d "$DOTFILES" ]; then
   pushd "$DOTFILES" >/dev/null && {
@@ -40,9 +48,4 @@ if [ -d "$DOTFILES" ]; then
   popd >/dev/null
 fi
 
-if [ -f ~/.profile.local ]; then
-  debug "Source ~/.profile.local"
-  source ~/.profile.local
-  debug "Sourced ~/.profile.local"
-fi
 

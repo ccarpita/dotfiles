@@ -13,20 +13,23 @@
 [credential]
   helper = cache
 [alias]
+  b = branch
+  c = commit
+  f = fetch
   co = checkout
   praise = blame
+  who = blame
   promote = git-promote
   wtf     = git-wtf
   rank-contributers = !$HOME/bin/git-rank-contributers
   count   = !git shortlog -sn
-  ribbon = tag --force _ribbon origin/master
+  ribbon = tag --force _ribbon origin/develop
   catchup = log --patch --reverse --topo-order _ribbon..origin/master
   find = log --pretty=\"format:%Cgreen%H %Cblue%s\" --name-status --grep
   log-pretty = log --pretty=\"format:%Cgreen%H %Cblue%an: %s\" --name-status
-  ci = commit
-  br = branch
-	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)<%an>%Creset' --abbrev-commit
-	bl = for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)<%an>%Creset' --abbrev-commit
+  bl = for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+  find-merge = "!sh -c 'commit=$0 && branch=${1:-HEAD} && (git rev-list $commit..$branch --ancestry-path | cat -n; git rev-list $commit..$branch --first-parent | cat -n) | sort -k2 -s | uniq -f1 -d | sort -n | tail -1 | cut -f2'"
 [color]
   diff = auto
   status = auto

@@ -10,3 +10,8 @@ source ~/.profile.d/zsh.sh
 eval "$(direnv hook zsh)"
 
 export PATH="$HOME/.poetry/bin:$PATH"
+# BEGIN source-develop-rc
+if [ -f ~/.bni/develop.rc ]; then
+  source ~/.bni/develop.rc
+fi
+# END source-develop-rc

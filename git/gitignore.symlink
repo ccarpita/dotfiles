@@ -131,3 +131,8 @@ dw/.env
 
 .terraform*
 terraform*backup
+
+I
+
+# TEMPORARY - Remove after merged to develop
+host/3rdParty/opencv-4.3.0/frameworks/
