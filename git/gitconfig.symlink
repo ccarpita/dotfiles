@@ -5,7 +5,7 @@
 #        protocol = https
 [user]
 	name = Chris Carpita
-	email = ccarpita@butterflynetinc.com
+	email = ccarpita@gmail.com
 	signingkey = 3618D6C0EF936376E0D53C43E7201850855A0BDB
 [init]
 	defaultBranch = main
