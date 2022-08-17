@@ -11,6 +11,7 @@ paths=(
   /usr/local/sbin
   /usr/local/bin
   /opt/android-sdk/platform-tools
+  /snap/bin
   $DOTFILES/bin
   $HOME/bin
   $HOME/go/bin
