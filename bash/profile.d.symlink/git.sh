@@ -126,11 +126,11 @@ git-authors() {
 
 git-delete-merged-branches() {
   # shellcheck disable=SC2063
-  main_branch="origin/main"
-  if git remote -v | grep -qE "ButterflyNetwork"; then
+  main_branch="master"
+  if git remote -v | grep -qE "ButterflyNetwork" | grep -qE "software"; then
     main_branch="origin/develop"
   fi
-  git branch --merged "$main_branch" | grep -v '^\(+\|\*\| *master\| *develop\| *production\)' | xargs -n 1 git branch -d
+  git branch --merged HEAD | grep -v '^\(+\|\*\| *master\| *develop\| *main\| *production\)' | xargs -n 1 git branch -d
 }
 
 git-last-merge() {

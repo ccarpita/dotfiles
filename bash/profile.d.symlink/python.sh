@@ -16,3 +16,7 @@ pybuild-static() {
 ./configure --disable-shared --enable-optimizations --prefix "$(pwd)/dist" --with-openssl="$(pybuild-openssl)"
   # LDFLAGS="-static" CFLAGS="-static" CPPFLAGS="-static"
 }
+
+pyt() {
+    pytest --disable-warnings -vv "$@"
+}

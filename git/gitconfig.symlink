@@ -4,11 +4,11 @@
 #[hub]
 #        protocol = https
 [user]
-	name = Chris Carpita
-	email = ccarpita@gmail.com
-	signingkey = 3618D6C0EF936376E0D53C43E7201850855A0BDB
+  name = Chris Carpita
+  email = ccarpita@butterflynetinc.com
+  signingkey = 3618D6C0EF936376E0D53C43E7201850855A0BDB
 [init]
-	defaultBranch = main
+  defaultBranch = main
 # templatedir = ~/.git_template
 [credential]
   helper = cache
@@ -34,26 +34,37 @@
   diff = auto
   status = auto
   branch = auto
-	ui = auto
+  ui = auto
 [commit]
   gpgsign = false
 [core]
-	excludesfile = /Users/ccarpita/.gitignore
+  excludesfile = /Users/ccarpita/.gitignore
   editor = vim
   autocrlf = false
   filemode = false
+  pager = delta
+	fsmonitor = true
+
+[interactive]
+  diffFilter = delta --color-only
+[delta]
+  navigate = true
+  side-by-side = false
+  syntax-theme = Dracula
+
 [apply]
   whitespace = nowarn
 [merge]
-    tool = vscode
+  tool = vscode
 [mergetool "vscode"]
-    cmd = code --wait $MERGED
+  cmd = code --wait $MERGED
 [mergetool]
   keepBackup = false
 [diff]
-    tool = vscode
+  tool = vscode
+  colorMoved = default
 [difftool "vscode"]
-    cmd = code --wait --diff $LOCAL $REMOTE
+  cmd = code --wait --diff $LOCAL $REMOTE
 [difftool]
   prompt = false
 [help]
@@ -65,23 +76,23 @@
   # Setting to git 2.0 default to surpress warning message
   default = current
 [branch]
-	autosetuprebase = always
+  autosetuprebase = always
   autosetupmerge = true
 [pull]
   ff=1
   rebase=1
 [lfs]
-	concurrenttransfers = 20
+  concurrenttransfers = 20
 [rerere]
-	enabled = true
+  enabled = true
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+  path = 
 [mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+  cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+  trustExitCode = true

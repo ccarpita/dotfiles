@@ -49,3 +49,4 @@ if [ -d "$DOTFILES" ]; then
 fi
 
 
+. "$HOME/.cargo/env"
