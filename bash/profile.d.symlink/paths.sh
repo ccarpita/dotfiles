@@ -12,17 +12,13 @@ paths=(
   /usr/local/bin
   /opt/android-sdk/platform-tools
   /snap/bin
+  /opt/homebrew/bin
   $DOTFILES/bin
   $HOME/bin
   $HOME/go/bin
   ./node_modules/.bin
   ./bin
 )
-
-
-if [[ $is_linux -eq 1 ]] && [[ "$(uname -i)" == "x86_64" ]]; then
-  paths+=($HOME/.dotfiles/bin-linux-x86_64)
-fi
 
 for comp in ${paths[@]}; do
   PATH="$comp:$PATH"

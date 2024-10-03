@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 
-export PATH="/usr/bin:/usr/local/bin:/usr/sbin:/sbin:/bin"
 export PROFILE_DEBUG=${PROFILE_DEBUG:-0}
 export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
 
+# Base Modules
 source ~/.profile.d/init.sh
-debug "Sourced: init.sh"
+include paths
 
+# Features
 include completions
 include settings
 include build
@@ -18,7 +19,6 @@ include java
 include locale
 include macos
 include net
-include paths
 include ps
 include prompt
 include python
@@ -27,7 +27,9 @@ include ssh
 include tmux
 include yaml
 include variables
+
 [[ $is_osx -eq 1 ]] && include darwin
+[[ "$SHELL" == "/bin/zsh" ]] && include zsh
 
 if [ -f ~/.profile.local ]; then
   debug "Source ~/.profile.local"
@@ -48,5 +50,3 @@ if [ -d "$DOTFILES" ]; then
   popd >/dev/null
 fi
 
-
-. "$HOME/.cargo/env"

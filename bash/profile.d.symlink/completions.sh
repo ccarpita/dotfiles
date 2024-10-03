@@ -25,7 +25,7 @@ if [[ -n "$BASH_VERSION" ]]; then
   }
 else
   complete-command() {
-    echo "Cannot complete: non-bash"
+    return 0
   }
   if is-zsh; then
     zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
