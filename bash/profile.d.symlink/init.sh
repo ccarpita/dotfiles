@@ -13,14 +13,11 @@ elif [[ "$(uname)" == "Linux" ]]; then
 fi
 
 is-bash() {
-  [[ -n "$BASH_VERSION" ]]
+  ps -p $$ -o command | tail -1 | grep -q bash
 }
 
 is-zsh() {
-  if [[ -z "${BASH:-}" ]] && [[ "$SHELL" == "/bin/zsh" ]]; then
-    return 0
-  fi
-  return 1
+  ps -p $$ -o command | tail -1 | grep -q zsh
 }
 
 time-ms() {

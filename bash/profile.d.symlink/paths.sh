@@ -10,11 +10,12 @@ paths=(
   /opt/local/sbin
   /usr/local/sbin
   /usr/local/bin
-  /opt/android-sdk/platform-tools
   /snap/bin
+  /opt/homebrew/opt/rustup
   /opt/homebrew/bin
   $DOTFILES/bin
   $HOME/bin
+  $HOME/.local/bin
   $HOME/go/bin
   ./node_modules/.bin
   ./bin

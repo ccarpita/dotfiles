@@ -12,5 +12,9 @@ spotlight-index-reset() {
     sudo mdutil -E /
 }
 
-export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-export PUPPETEER_EXECUTABLE_PATH=`which chromium`
+ICLOUD_HOME="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
+
+icloud-evict() {
+  find "$ICLOUD_HOME" -type f -exec brctl evict {} \;
+}
+

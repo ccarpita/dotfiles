@@ -333,7 +333,7 @@ hi YcmWarningSection guibg=#3f0000 ctermbg=darkgrey
 let g:javascript_plugin_jsdoc = 1
 
 let g:prettier#autoformat = 0
-autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
+" autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
 
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.o,*/build/*
 

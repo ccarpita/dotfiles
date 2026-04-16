@@ -56,11 +56,14 @@ git_prompt_info() {
 
 virtualenv_info() {
   [[ -z "$VIRTUAL_ENV" ]] && return
-  VENV="$VIRTUAL_ENV"
+  local venv="$VIRTUAL_ENV"
   if [[ -n "$WORKON_HOME" ]]; then
-      VENV="${VENV/$WORKON_HOME\//env:}"
+      venv="${venv/$WORKON_HOME\//env:}"
   fi
-  echo "$VENV" | sed -e "s/.*\/envs\///" 2>/dev/null
+  label=$(echo "$venv" | sed -e "s/.*\/envs\///" | sed -e "s/.*\/virtualenvs\///" 2>/dev/null)
+  if [[ -n "$label" ]]; then
+    echo " %F{green}$label%f"
+  fi
 }
 
 

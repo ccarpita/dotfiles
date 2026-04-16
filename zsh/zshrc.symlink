@@ -1,9 +1,20 @@
 setopt PROMPT_SUBST
 
-alias sourcezshrc="source \$HOME/.zshrc"
+alias sourcezshprofile="source \$HOME/.zprofile"
 alias sourceprofile="source \$HOME/.profile"
 
 sourceprofile
 
 eval "$(nodenv init - zsh)"
 eval "$(pyenv init -)"
+
+sourcezshprofile
+
+. "$HOME/.local/bin/env"
+
+if [[ "${VSCODE_PROFILE_INITIALIZED:-}" == "1" ]] && [[ -z "${_VSC_OUTPUT_CAPTURED:-}" ]]; then
+  export _VSC_OUTPUT_CAPTURED=1
+  LOG_FILE="/tmp/session_$(date +%Y%m%d_%H%M%S).log"
+  script "$LOG_FILE"
+fi
+

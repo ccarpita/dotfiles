@@ -49,6 +49,15 @@ git-pull() {
   fi
 }
 
+gh-trigger-branch-workflow() {
+  workflow="$1"; shift
+  if [[ ! -f "$workflow" ]]; then
+    echo "Workflow file not found: $workflow"
+    return 1
+  fi
+  gh workflow run "$(basename "$workflow")" --ref $(git-current-branch) "$@"
+}
+
 git-pull-request() {
   local messagefile="/tmp/pr-message.$$"
   local args=('--push' '--file' "$messagefile" "--edit" "--draft")
@@ -126,11 +135,13 @@ git-authors() {
 
 git-delete-merged-branches() {
   # shellcheck disable=SC2063
-  main_branch="master"
-  if git remote -v | grep -qE "ButterflyNetwork" | grep -qE "software"; then
-    main_branch="origin/develop"
-  fi
-  git branch --merged HEAD | grep -v '^\(+\|\*\| *master\| *develop\| *main\| *production\)' | xargs -n 1 git branch -d
+  main_branch="main"
+  for branch in $(gh pr list -s merged --json headRefName --author '@me' -q '.[].headRefName' | sort); do
+    if git rev-parse "$branch" &>/dev/null; then
+      echo git branch -D "$branch"
+      git branch -D "$branch"
+    fi
+  done
 }
 
 git-last-merge() {

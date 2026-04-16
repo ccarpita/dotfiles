@@ -50,3 +50,5 @@ if [ -d "$DOTFILES" ]; then
   popd >/dev/null
 fi
 
+
+. "$HOME/.local/bin/env"
