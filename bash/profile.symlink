@@ -45,6 +45,7 @@ if [ -d "$DOTFILES" ]; then
       yellow=$(tput setaf 3)
       reset=$(tput sgr0)
       echo -e "${yellow}$DOTFILES has been modified. Commit and push changes at your earliest convenience.${reset}"
+      echo "Command: git -C $DOTFILES add . && git -C $DOTFILES commit && git -C $DOTFILES push"
     fi
   }
   popd >/dev/null
